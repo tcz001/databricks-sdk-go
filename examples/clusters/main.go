@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/betabandido/databricks-sdk-go/api/clusters"
-	"github.com/betabandido/databricks-sdk-go/client"
-	"github.com/betabandido/databricks-sdk-go/models"
+	"github.com/tcz001/databricks-sdk-go/api/clusters"
+	"github.com/tcz001/databricks-sdk-go/client"
+	"github.com/tcz001/databricks-sdk-go/models"
 	"io/ioutil"
 )
 

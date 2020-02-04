@@ -1,6 +1,6 @@
 # Databricks SDK for Go
 
-[![Build Status](https://travis-ci.org/betabandido/databricks-sdk-go.svg?branch=master)](https://travis-ci.org/betabandido/databricks-sdk-go)
+[![Build Status](https://travis-ci.org/tcz001/databricks-sdk-go.svg?branch=master)](https://travis-ci.org/tcz001/databricks-sdk-go)
 
 databricks-sdk-go is an unofficial Databricks SDK for the Go programming language. It currently only supports a subset of the operations provided by the [Databricks REST API](https://docs.databricks.com/api/latest/index.html). At this point, there is only support for the following APIs:
 
@@ -13,7 +13,7 @@ databricks-sdk-go is an unofficial Databricks SDK for the Go programming languag
 To install the SDK run the following command:
 
 ```bash
-go get -u github.com/betabandido/databricks-sdk-go
+go get -u github.com/tcz001/databricks-sdk-go
 ```
 
 ## Usage

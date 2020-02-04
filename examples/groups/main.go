@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/betabandido/databricks-sdk-go/api/groups"
-	"github.com/betabandido/databricks-sdk-go/client"
-	"github.com/betabandido/databricks-sdk-go/models"
+	"github.com/tcz001/databricks-sdk-go/api/groups"
+	"github.com/tcz001/databricks-sdk-go/client"
+	"github.com/tcz001/databricks-sdk-go/models"
 )
 
 func main() {
