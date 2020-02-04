@@ -583,6 +583,82 @@ definitions:
         type: string
       user_name:
         type: string
+
+  ### Secrets ###
+  SecretsPutRequest:
+    required:
+      - scope 
+      - key 
+    properties:
+      scope:
+        type: string
+      key:
+        type: string
+      string_value:
+        type: string
+      bytes_value:
+        type: string
+  SecretsPutResponse:
+    properties:
+      scope:
+        type: string  
+  SecretsListResponse:
+    properties:
+      secrets:
+        type: array  
+        items:
+          $ref: '#/definitions/SecretListItem'
+  SecretListItem:
+    properties:
+      key:
+        type: string  
+      last_updated_timestamp:
+        type: string  
+  SecretsDeleteRequest:
+    required:
+      - scope 
+      - key 
+    properties:
+      scope:
+        type: string
+      key:
+        type: string
+  ### Secrets Scopes ###
+  SecretsScopesCreateRequest:
+    required:
+      - scope 
+    properties:
+      scope:
+        type: string
+      initial_manage_principal:
+        type: string
+  SecretsScopesCreateResponse:
+    properties:
+      scope:
+        type: string  
+  SecretsScopesListResponse:
+    properties:
+      scopes:
+        type: array  
+        items:
+          $ref: '#/definitions/SecretScopeListItem'
+  SecretScopeListItem:
+    properties:
+      name:
+        type: string  
+      backend_type:
+        type: string  
+  SecretsScopesDeleteRequest:
+    required:
+      - scope 
+    properties:
+      scope:
+        type: string
+  SecretsScopesCreateResponse:
+    properties:
+      scope:
+        type: string  
+
   ### Errors ###
   ErrorResponse:
     required:
