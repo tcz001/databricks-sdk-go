@@ -598,6 +598,12 @@ definitions:
         type: string
       bytes_value:
         type: string
+  SecretsListRequest:
+    required:
+      - scope
+    properties:
+      scope:
+        type: string
   SecretsPutResponse:
     properties:
       scope:

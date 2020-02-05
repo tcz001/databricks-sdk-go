@@ -26,8 +26,8 @@ func (c *Endpoint) Put(request *models.SecretsPutRequest) (*models.SecretsPutRes
 	return &resp, nil
 }
 
-func (c *Endpoint) List() (*models.SecretsListResponse, error) {
-	bytes, err := c.Client.Query("GET", "secrets/list", nil)
+func (c *Endpoint) List(request *models.SecretsListRequest) (*models.SecretsListResponse, error) {
+	bytes, err := c.Client.Query("GET", "secrets/list", request)
 	if err != nil {
 		return nil, err
 	}
