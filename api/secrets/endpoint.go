@@ -11,19 +11,13 @@ type Endpoint struct {
 	Client *client.Client
 }
 
-func (c *Endpoint) Put(request *models.SecretsPutRequest) (*models.SecretsPutResponse, error) {
-	bytes, err := c.Client.Query("PUT", "secrets/put", request)
+func (c *Endpoint) Put(request *models.SecretsPutRequest) error {
+	_, err := c.Client.Query("PUT", "secrets/put", request)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	resp := models.SecretsPutResponse{}
-	err = json.Unmarshal(bytes, &resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp, nil
+	return nil
 }
 
 func (c *Endpoint) List(request *models.SecretsListRequest) (*models.SecretsListResponse, error) {
