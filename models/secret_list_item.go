@@ -13,5 +13,5 @@ package models
 type SecretListItem struct {
 	Key string `json:"key,omitempty"`
 
-	LastUpdatedTimestamp string `json:"last_updated_timestamp,omitempty"`
+	LastUpdatedTimestamp int64 `json:"last_updated_timestamp,omitempty"`
 }
