@@ -12,7 +12,7 @@ type Endpoint struct {
 }
 
 func (c *Endpoint) Put(request *models.SecretsPutRequest) error {
-	_, err := c.Client.Query("PUT", "secrets/put", request)
+	_, err := c.Client.Query("POST", "secrets/put", request)
 	if err != nil {
 		return err
 	}
