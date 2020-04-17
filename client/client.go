@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/tcz001/databricks-sdk-go/models"
-	"github.com/golang/glog"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -13,11 +11,18 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/golang/glog"
+	"github.com/tcz001/databricks-sdk-go/models"
 )
 
 type Options struct {
-	Domain     *string
-	Token      *string
+	Domain *string
+	Token  *string
+
+	XDatabricksAzureWorkspaceResourceId *string
+	XDatabricksAzureSPManagementToken   *string
+
 	MaxRetries int
 	RetryDelay time.Duration
 }
@@ -37,6 +42,14 @@ func NewClient(opts Options) (*Client, error) {
 		return nil, fmt.Errorf("missing credentials")
 	}
 
+	if opts.XDatabricksAzureWorkspaceResourceId != nil && (opts.Token == nil || opts.XDatabricksAzureSPManagementToken == nil) {
+		return nil, fmt.Errorf("missing X-Databricks-Azure-SP-Management-Token, when specifiying X-Databricks-Azure-Workspace-Resource-Id is provided")
+	}
+
+	if opts.XDatabricksAzureSPManagementToken != nil && opts.XDatabricksAzureWorkspaceResourceId == nil {
+		return nil, fmt.Errorf("missing X-Databricks-Azure-Workspace-Resource-Id, when X-Databricks-Azure-SP-Management-Token is provided")
+	}
+
 	baseUrl, err := url.Parse(fmt.Sprintf("https://%s/api/2.0/", *opts.Domain))
 	if err != nil {
 		panic(err)
@@ -44,6 +57,10 @@ func NewClient(opts Options) (*Client, error) {
 
 	header := http.Header{}
 	header.Add("Authorization", fmt.Sprintf("Bearer %s", *opts.Token))
+	if opts.XDatabricksAzureWorkspaceResourceId != nil && opts.XDatabricksAzureSPManagementToken != nil {
+		header.Add("X-Databricks-Azure-SP-Management-Token", fmt.Sprintf(*opts.XDatabricksAzureSPManagementToken))
+		header.Add("X-Databricks-Azure-Workspace-Resource-Id", fmt.Sprintf(*opts.XDatabricksAzureWorkspaceResourceId))
+	}
 
 	client := Client{
 		http: &http.Client{
