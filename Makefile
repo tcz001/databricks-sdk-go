@@ -1,5 +1,7 @@
 all: test
 
+install-swagger:
+	brew install swagger-codegen@2
 test: get-deps generate
 	go test ./...
 

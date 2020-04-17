@@ -660,11 +660,47 @@ definitions:
     properties:
       scope:
         type: string
-  SecretsScopesCreateResponse:
+  ### Tokens ###
+  TokenCreateRequest:
+    required:
+      - lifetime_seconds 
+      - comment 
     properties:
-      scope:
-        type: string  
-
+      lifetime_seconds:
+        type: string
+      comment:
+        type: string
+  TokenCreateReponse:
+    properties:
+      token_value:
+        type: string
+      token_info:
+        type: object
+        $ref: '#/definitions/TokenInfo'
+  TokenListResponse:
+    properties:
+      token_infos:
+        type: array  
+        items:
+          $ref: '#/definitions/TokenInfo'
+  TokenInfo:
+    properties:
+      token_id:
+        type: string
+      creation_time:
+        type: integer
+        format: int32
+      expiry_time:
+        type: integer
+        format: int32
+      comment:
+        type: string
+  TokenRevokeRequest:
+    required:
+      - token_id 
+    properties:
+      token_id:
+        type: string
   ### Errors ###
   ErrorResponse:
     required:
