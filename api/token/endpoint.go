@@ -11,13 +11,19 @@ type Endpoint struct {
 	Client *client.Client
 }
 
-func (c *Endpoint) Create(request *models.TokenCreateRequest) error {
-	_, err := c.Client.Query("POST", "token/put", request)
+func (c *Endpoint) Create(request *models.TokenCreateRequest) (*models.TokenCreateReponse, error) {
+	bytes, err := c.Client.Query("POST", "token/create", request)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	resp := models.TokenCreateReponse{}
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
 }
 
 func (c *Endpoint) List() (*models.TokenListResponse, error) {
