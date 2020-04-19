@@ -667,7 +667,8 @@ definitions:
       - comment 
     properties:
       lifetime_seconds:
-        type: string
+        type: integer
+        format: int32
       comment:
         type: string
   TokenCreateReponse:
@@ -689,10 +690,10 @@ definitions:
         type: string
       creation_time:
         type: integer
-        format: int32
+        format: int64
       expiry_time:
         type: integer
-        format: int32
+        format: int64
       comment:
         type: string
   TokenRevokeRequest:
