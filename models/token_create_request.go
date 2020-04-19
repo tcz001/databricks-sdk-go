@@ -10,6 +10,6 @@
 package models
 
 type TokenCreateRequest struct {
-	LifetimeSeconds string `json:"lifetime_seconds"`
+	LifetimeSeconds int32  `json:"lifetime_seconds"`
 	Comment         string `json:"comment"`
 }
