@@ -52,11 +52,20 @@ func deleteServicePrincipal(endpoint scim.Endpoint, id string) {
 }
 
 func createServicePrincipal(endpoint scim.Endpoint, appId string, displayName string) *models.ServicePrincipal {
-	fmt.Println("Attaching Service Principals for id: %s", appId)
+	fmt.Println("Attaching Service Principals for id:", appId)
 	req := models.ServicePrincipalCreateRequest{}
 	req.ApplicationId = appId
 	req.DisplayName = displayName
 	resp, err := endpoint.CreateServicePrincipal(&req)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func updateServicePrincipal(endpoint scim.Endpoint, id string, updatedSP models.ServicePrincipal) *models.ServicePrincipal {
+	fmt.Println("Updating Service Principals for SP id:", id)
+	resp, err := endpoint.UpdateServicePrincipal(&updatedSP)
 	if err != nil {
 		panic(err)
 	}

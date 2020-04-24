@@ -48,9 +48,13 @@ func (c *Endpoint) CreateServicePrincipal(request *models.ServicePrincipalCreate
 	return &resp, nil
 }
 
-func (c *Endpoint) UpdateServicePrincipal() (*models.ServicePrincipalsListResponse, error) {
-	bytes, err := c.Client.Query("GET", "preview/scim/v2/ServicePrincipals", nil)
-	resp := models.ServicePrincipalsListResponse{}
+func (c *Endpoint) UpdateServicePrincipal(updatedServicePrincipal *models.ServicePrincipal) (*models.ServicePrincipal, error) {
+	if updatedServicePrincipal.Id == "" {
+		return nil, fmt.Errorf("No Service Principal provided")
+	}
+	updateSPUrl := fmt.Sprintf("preview/scim/v2/ServicePrincipals/%s", updatedServicePrincipal.Id)
+	bytes, err := c.Client.Query("PUT", updateSPUrl, updatedServicePrincipal)
+	resp := models.ServicePrincipal{}
 	err = json.Unmarshal(bytes, &resp)
 	if err != nil {
 		return nil, err
