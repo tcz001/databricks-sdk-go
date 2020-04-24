@@ -663,9 +663,10 @@ definitions:
   ### Service Principals ###
   ServicePrincipalsListResponse:
     properties:
-      type: array
-      items:
-        $ref: '#/definitions/ServicePrincipal'
+      Resources:
+        type: array
+        items:
+          $ref: '#/definitions/ServicePrincipal'
       totalResults:
         type: number
       startIndex:

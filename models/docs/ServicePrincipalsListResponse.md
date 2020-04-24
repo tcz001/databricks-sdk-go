@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Items** | [***ServicePrincipal**](ServicePrincipal.md) |  | [optional] [default to null]
+**Resource** | [**[]ServicePrincipal**](ServicePrincipal.md) |  | [optional] [default to null]
 **TotalResults** | **float32** |  | [optional] [default to null]
 **StartIndex** | **float32** |  | [optional] [default to null]
 **ItemsPerPage** | **float32** |  | [optional] [default to null]

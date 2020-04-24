@@ -10,9 +10,9 @@
 package models
 
 type ServicePrincipalsListResponse struct {
-	Items        *ServicePrincipal `json:"items,omitempty"`
-	TotalResults float32           `json:"totalResults,omitempty"`
-	StartIndex   float32           `json:"startIndex,omitempty"`
-	ItemsPerPage float32           `json:"itemsPerPage,omitempty"`
-	Schemas      []string          `json:"schemas,omitempty"`
+	Resources     []ServicePrincipal `json:"Resources,omitempty"`
+	TotalResults float32            `json:"totalResults,omitempty"`
+	StartIndex   float32            `json:"startIndex,omitempty"`
+	ItemsPerPage float32            `json:"itemsPerPage,omitempty"`
+	Schemas      []string           `json:"schemas,omitempty"`
 }
