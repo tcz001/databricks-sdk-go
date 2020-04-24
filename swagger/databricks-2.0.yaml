@@ -95,7 +95,7 @@ definitions:
       - SOURCE
       - HTML
       - JUPYTER
-      - DBC    
+      - DBC
   WorkspaceLanguage:
     type: string
     default: SCALA
@@ -103,7 +103,7 @@ definitions:
       - SCALA
       - PYTHON
       - SQL
-      - R    
+      - R
   WorkspaceObject:
     required:
       - path
@@ -493,7 +493,7 @@ definitions:
       spark_version:
         type: string
       node_type_id:
-        type: string            
+        type: string
   NotebookTask:
     required:
       - notebook_path
@@ -527,7 +527,7 @@ definitions:
   GroupsCreateResponse:
     properties:
       group_name:
-        type: string  
+        type: string
   GroupsListMembersRequest:
     required:
       - group_name
@@ -587,8 +587,8 @@ definitions:
   ### Secrets ###
   SecretsPutRequest:
     required:
-      - scope 
-      - key 
+      - scope
+      - key
     properties:
       scope:
         type: string
@@ -607,23 +607,23 @@ definitions:
   SecretsPutResponse:
     properties:
       scope:
-        type: string  
+        type: string
   SecretsListResponse:
     properties:
       secrets:
-        type: array  
+        type: array
         items:
           $ref: '#/definitions/SecretListItem'
   SecretListItem:
     properties:
       key:
-        type: string  
+        type: string
       last_updated_timestamp:
-        type: string  
+        type: string
   SecretsDeleteRequest:
     required:
-      - scope 
-      - key 
+      - scope
+      - key
     properties:
       scope:
         type: string
@@ -632,7 +632,7 @@ definitions:
   ### Secrets Scopes ###
   SecretsScopesCreateRequest:
     required:
-      - scope 
+      - scope
     properties:
       scope:
         type: string
@@ -641,30 +641,77 @@ definitions:
   SecretsScopesCreateResponse:
     properties:
       scope:
-        type: string  
+        type: string
   SecretsScopesListResponse:
     properties:
       scopes:
-        type: array  
+        type: array
         items:
           $ref: '#/definitions/SecretScopeListItem'
   SecretScopeListItem:
     properties:
       name:
-        type: string  
+        type: string
       backend_type:
-        type: string  
+        type: string
   SecretsScopesDeleteRequest:
     required:
-      - scope 
+      - scope
     properties:
       scope:
         type: string
+  ### Service Principals ###
+  ServicePrincipalsListResponse:
+    properties:
+      type: array
+      items:
+        $ref: '#/definitions/ServicePrincipal'
+      totalResults:
+        type: number
+      startIndex:
+        type: number
+      itemsPerPage:
+        type: number
+      schemas:
+        type: array
+        items:
+          type: string
+  ServicePrincipal:
+    properties:
+      displayName:
+        type: string
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Groups'
+      id:
+        type: string
+      entitlements:
+        type: array
+        items:
+          $ref: '#/definitions/Entitlements'
+      applicationId:
+        type: string
+      active:
+        type: boolean
+  Entitlements:
+    properties:
+      value:
+        type: string
+  Groups:
+    properties:
+      display:
+        type: string
+      value:
+        type: string
+      $ref:
+        type: string
+
   ### Tokens ###
   TokenCreateRequest:
     required:
-      - lifetime_seconds 
-      - comment 
+      - lifetime_seconds
+      - comment
     properties:
       lifetime_seconds:
         type: integer
@@ -681,7 +728,7 @@ definitions:
   TokenListResponse:
     properties:
       token_infos:
-        type: array  
+        type: array
         items:
           $ref: '#/definitions/TokenInfo'
   TokenInfo:
@@ -698,7 +745,7 @@ definitions:
         type: string
   TokenRevokeRequest:
     required:
-      - token_id 
+      - token_id
     properties:
       token_id:
         type: string
