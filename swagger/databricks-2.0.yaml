@@ -661,6 +661,16 @@ definitions:
       scope:
         type: string
   ### Service Principals ###
+  ServicePrincipalCreateRequest:
+    properties:
+      applicationId:
+        type: string
+      displayName:
+        type: string
+      entitlements:
+        type: array
+        items:
+          $ref: '#/definitions/Entitlements'
   ServicePrincipalsListResponse:
     properties:
       Resources:

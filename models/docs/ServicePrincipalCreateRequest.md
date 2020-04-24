@@ -1,13 +1,12 @@
-# ServicePrincipalsListResponse
+# ServicePrincipalCreateRequest
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Resources** | [**[]ServicePrincipal**](ServicePrincipal.md) |  | [optional] [default to null]
-**TotalResults** | **float32** |  | [optional] [default to null]
-**StartIndex** | **float32** |  | [optional] [default to null]
-**ItemsPerPage** | **float32** |  | [optional] [default to null]
 **Schemas** | **[]string** |  | [optional] [default to null]
+**ApplicationId** | **string** |  | [optional] [default to null]
+**DisplayName** | **string** |  | [optional] [default to null]
+**Entitlements** | [**[]Entitlements**](Entitlements.md) |  | [optional] [default to null]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

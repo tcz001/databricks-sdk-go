@@ -10,10 +10,9 @@ import (
 	"io/ioutil"
 )
 
-
 func main() {
 	flag.Parse() // required to suppress warnings from glog
-	
+
 	secrets := loadSecrets()
 
 	cl, err := client.NewClient(client.Options{
@@ -26,7 +25,6 @@ func main() {
 		panic(err)
 	}
 
-
 	endpoint := scim.Endpoint{
 		Client: cl,
 	}
@@ -35,13 +33,43 @@ func main() {
 
 }
 
+func getServicePrincipal(endpoint scim.Endpoint, id string) *models.ServicePrincipal {
+	fmt.Println("Getting Service Principals for id:", id)
+	resp, err := endpoint.GetServicePrincipal(id)
+	fmt.Println("Response:\n", resp)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func deleteServicePrincipal(endpoint scim.Endpoint, id string) {
+	fmt.Println("Deleting Service Principals for id:", id)
+	err := endpoint.DeleteServicePrincipal(id)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func createServicePrincipal(endpoint scim.Endpoint, appId string, displayName string) *models.ServicePrincipal {
+	fmt.Println("Attaching Service Principals for id: %s", appId)
+	req := models.ServicePrincipalCreateRequest{}
+	req.ApplicationId = appId
+	req.DisplayName = displayName
+	resp, err := endpoint.CreateServicePrincipal(&req)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
 func printServicePrincipals(principals []models.ServicePrincipal) {
 	fmt.Println(principals)
 }
 
 func listServicePrincipals(endpoint scim.Endpoint) []models.ServicePrincipal {
 	fmt.Println("Listing Service Principals")
-	resp,err := endpoint.List()
+	resp, err := endpoint.List()
 	if err != nil {
 		panic(err)
 	}
