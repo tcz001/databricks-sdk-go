@@ -10,7 +10,7 @@
 package models
 
 type ServicePrincipalsListResponse struct {
-	Resources     []ServicePrincipal `json:"Resources,omitempty"`
+	Resources    []ServicePrincipal `json:"Resources,omitempty"`
 	TotalResults float32            `json:"totalResults,omitempty"`
 	StartIndex   float32            `json:"startIndex,omitempty"`
 	ItemsPerPage float32            `json:"itemsPerPage,omitempty"`

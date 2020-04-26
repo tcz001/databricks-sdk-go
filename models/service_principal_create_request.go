@@ -12,5 +12,6 @@ package models
 type ServicePrincipalCreateRequest struct {
 	ApplicationId string         `json:"applicationId,omitempty"`
 	DisplayName   string         `json:"displayName,omitempty"`
+	Groups        []Groups       `json:"groups,omitempty"`
 	Entitlements  []Entitlements `json:"entitlements,omitempty"`
 }

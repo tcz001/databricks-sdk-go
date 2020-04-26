@@ -667,6 +667,10 @@ definitions:
         type: string
       displayName:
         type: string
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Groups'
       entitlements:
         type: array
         items:
