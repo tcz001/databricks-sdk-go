@@ -77,7 +77,7 @@ func (c *Endpoint) DeleteServicePrincipal(id string) error {
 	return nil
 }
 
-func (c *Endpoint) ListUserGroups() (*models.ListGroupRequestScim,error) {
+func (c *Endpoint) ListGroups() (*models.ListGroupRequestScim,error) {
 
 	bytes, err := c.Client.Query("GET", "preview/scim/v2/Groups", nil)
 	resp := models.ListGroupRequestScim{}
@@ -89,7 +89,7 @@ func (c *Endpoint) ListUserGroups() (*models.ListGroupRequestScim,error) {
 	return &resp, nil
 }
 
-func (c *Endpoint) CreateUserGroup(request *models.ScimGroup) (*models.ScimGroup, error) {
+func (c *Endpoint) CreateGroup(request *models.ScimGroup) (*models.ScimGroup, error) {
 	bytes, err := c.Client.Query("POST", "preview/scim/v2/Groups", request)
 	resp := models.ScimGroup{}
 	err = json.Unmarshal(bytes, &resp)
@@ -99,12 +99,12 @@ func (c *Endpoint) CreateUserGroup(request *models.ScimGroup) (*models.ScimGroup
 	return &resp, nil
 }
 
-func (c *Endpoint) GetUserGroup(id string) (*models.ScimGroup,error) {
+func (c *Endpoint) GetGroup(id string) (*models.ScimGroup,error) {
 	if id == "" {
 		return nil, fmt.Errorf("No Group id provided")
 	}
-	getUserUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
-	bytes, err := c.Client.Query("GET", getUserUrl, nil)
+	getGroupUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
+	bytes, err := c.Client.Query("GET", getGroupUrl, nil)
 	resp := models.ScimGroup{}
 	err = json.Unmarshal(bytes, &resp)
 	if err != nil {
@@ -113,15 +113,29 @@ func (c *Endpoint) GetUserGroup(id string) (*models.ScimGroup,error) {
 	return &resp, nil
 }
 
-func (c *Endpoint) DeleteUserGroup(id string) (error) {
+func (c *Endpoint) DeleteGroup(id string) (error) {
 	if id == "" {
 		return fmt.Errorf("No Group id provided")
 	}
-	deleteUserUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
-	resp, err := c.Client.Query("DELETE", deleteUserUrl, nil)
+	deleteGroupUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
+	resp, err := c.Client.Query("DELETE", deleteGroupUrl, nil)
 	fmt.Println(resp)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (c *Endpoint) UpdateGroup(id string,group models.ScimGroup) (*models.ScimGroup,error) {
+	if id == "" {
+		return nil,fmt.Errorf("No Group id provided")
+	}
+	updateGroupUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
+	bytes, err := c.Client.Query("PUT", updateGroupUrl, group)
+	resp := models.ScimGroup{}
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return &resp, err
+	}
+	return &resp, nil
 }

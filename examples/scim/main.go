@@ -30,10 +30,9 @@ func main() {
 	}
 
 	//printServicePrincipals(listServicePrincipals(endpoint))
-	//printUserGroups(listUserGroups(endpoint))
-	//printCreatedGroups(createUserGroups(endpoint))
-	//printGetGroup(getUserGroup(endpoint,"2812227734411558"))
-	deleteUserGroup(endpoint,"4593788545285908")
+	printUserGroups(listGroups(endpoint))
+	//printCreatedGroups(createGroup(endpoint))
+
 }
 
 func printGetGroup(group *models.ScimGroup) {
@@ -144,20 +143,20 @@ func loadSecrets() *secrets {
 	return &sc
 }
 
-func listUserGroups(endpoint scim.Endpoint) []models.ScimGroup {
+func listGroups(endpoint scim.Endpoint) []models.ScimGroup {
 	fmt.Println("Listing User Groups")
-	resp, err := endpoint.ListUserGroups()
+	resp, err := endpoint.ListGroups()
 	if err != nil {
 		panic(err)
 	}
 	return resp.Resources
 }
 
-func createUserGroups(endpoint scim.Endpoint) (string,[]models.ScimMember) {
+func createGroup(endpoint scim.Endpoint,memberId string) (string,[]models.ScimMember) {
 	fmt.Println("Creating User Group")
 	member := models.ScimMember{
 		Display: "",
-		Value:   "5648206897659689",
+		Value:   memberId,
 		Ref:     "",
 	}
 	group := models.ScimGroup{
@@ -167,26 +166,55 @@ func createUserGroups(endpoint scim.Endpoint) (string,[]models.ScimMember) {
 		Groups:       nil,
 		Id:           "",
 	}
-	resp, err := endpoint.CreateUserGroup(&group)
+	resp, err := endpoint.CreateGroup(&group)
 	if err != nil {
 		panic(err)
 	}
 	return resp.DisplayName,resp.Members
 }
 
-func getUserGroup(endpoint scim.Endpoint,id string) *models.ScimGroup {
+func getGroup(endpoint scim.Endpoint,id string) *models.ScimGroup {
 	fmt.Println("Getting User Group with id:",id)
-	resp, err := endpoint.GetUserGroup(id)
+	resp, err := endpoint.GetGroup(id)
 	if err != nil {
 		panic(err)
 	}
 	return resp
 }
 
-func deleteUserGroup(endpoint scim.Endpoint,id string) {
+func deleteGroup(endpoint scim.Endpoint,id string) {
 	fmt.Println("Deleting User Group with id:",id)
-	err := endpoint.DeleteUserGroup(id)
+	err := endpoint.DeleteGroup(id)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func updateGroup(endpoint scim.Endpoint,id string,memberId string,memberName string,groupName string) *models.ScimGroup {
+	fmt.Println("Updating User Group with id:",id)
+	fmt.Println("Creating User Group")
+
+	updateMemberRef := fmt.Sprintf("https://eastus2.azuredatabricks.net/api/2.0/scim/v2/ServicePrincipals/%s", memberId)
+	member := models.ScimMember{
+		Display: memberName,
+		Value:   memberId,
+		Ref:     updateMemberRef,
+	}
+
+	entitlement1 := models.Entitlements{Value: "allow-cluster-create"}
+	entitlement2 := models.Entitlements{Value: "allow-instance-pool-create"}
+	group := models.ScimGroup{
+		Entitlements: []models.Entitlements{entitlement1,entitlement2},
+		DisplayName:  groupName,
+		Members:      []models.ScimMember{member},
+		Groups:       nil,
+		Id:           id,
+	}
+
+
+	resp,err := endpoint.UpdateGroup(id,group)
+	if err != nil {
+		panic(err)
+	}
+	return resp
 }
