@@ -29,7 +29,10 @@ func main() {
 		Client: cl,
 	}
 
-	printServicePrincipals(listServicePrincipals(endpoint))
+	//printServicePrincipals(listServicePrincipals(endpoint))
+	printUserGroups(listUserGroups(endpoint))
+	//printCreatedGroups(createUserGroups(endpoint))
+
 
 }
 
@@ -76,9 +79,32 @@ func printServicePrincipals(principals []models.ServicePrincipal) {
 	fmt.Println(principals)
 }
 
+func printUserGroups(groups []models.ScimGroup) {
+	for index, element := range groups {
+		fmt.Println(index, "displayName: =>", element.DisplayName)
+		fmt.Println(index, "id: =>", element.Id)
+		members := element.Members
+		for _,element2 := range members {
+			fmt.Println("value id: =>", element2.Value)
+			fmt.Println("displayName with Member: =>", element2.Display)
+		}
+
+	}
+	fmt.Println(groups)
+}
+
+func printCreatedGroups(displayName string, members []models.ScimMember) {
+	fmt.Println("group displayName :",displayName)
+	for index, element := range members {
+		fmt.Println(index, "Member id: =>", element.Value)
+		fmt.Println(index, "Member displayNAme: =>", element.Display)
+		fmt.Println(index, "Member ref: =>", element.Ref)
+	}
+}
+
 func listServicePrincipals(endpoint scim.Endpoint) []models.ServicePrincipal {
 	fmt.Println("Listing Service Principals")
-	resp, err := endpoint.List()
+	resp, err := endpoint.ListServicePrincipal()
 	if err != nil {
 		panic(err)
 	}
@@ -107,4 +133,34 @@ func loadSecrets() *secrets {
 	}
 
 	return &sc
+}
+
+func listUserGroups(endpoint scim.Endpoint) []models.ScimGroup {
+	fmt.Println("Listing User Groups")
+	resp, err := endpoint.ListUserGroups()
+	if err != nil {
+		panic(err)
+	}
+	return resp.Resources
+}
+
+func createUserGroups(endpoint scim.Endpoint) (string,[]models.ScimMember) {
+	fmt.Println("Creating User Group")
+	member := models.ScimMember{
+		Display: "",
+		Value:   "5648206897659689",
+		Ref:     "",
+	}
+	group := models.ScimGroup{
+		Entitlements: nil,
+		DisplayName:  "blah4",
+		Members:      []models.ScimMember{member},
+		Groups:       nil,
+		Id:           "",
+	}
+	resp, err := endpoint.CreateUserGroup(&group)
+	if err != nil {
+		panic(err)
+	}
+	return resp.DisplayName,resp.Members
 }

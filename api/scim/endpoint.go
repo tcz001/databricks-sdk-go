@@ -76,3 +76,25 @@ func (c *Endpoint) DeleteServicePrincipal(id string) error {
 	fmt.Println(resp)
 	return nil
 }
+
+func (c *Endpoint) ListUserGroups() (*models.ListGroupRequestScim,error) {
+
+	bytes, err := c.Client.Query("GET", "preview/scim/v2/Groups", nil)
+	resp := models.ListGroupRequestScim{}
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
+}
+
+func (c *Endpoint) CreateUserGroup(request *models.ScimGroup) (*models.ScimGroup, error) {
+	bytes, err := c.Client.Query("POST", "preview/scim/v2/Groups", request)
+	resp := models.ScimGroup{}
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
