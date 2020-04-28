@@ -30,10 +30,19 @@ func main() {
 	}
 
 	//printServicePrincipals(listServicePrincipals(endpoint))
-	printUserGroups(listUserGroups(endpoint))
+	//printUserGroups(listUserGroups(endpoint))
 	//printCreatedGroups(createUserGroups(endpoint))
+	//printGetGroup(getUserGroup(endpoint,"2812227734411558"))
+	deleteUserGroup(endpoint,"4593788545285908")
+}
 
-
+func printGetGroup(group *models.ScimGroup) {
+	fmt.Println("GroupId:",group.Id)
+	fmt.Println("GroupDisplayName:",group.DisplayName)
+	for index, element := range group.Members {
+		fmt.Println(index, "displayName: =>", element.Display)
+		fmt.Println(index, "id: =>", element.Value)
+	}
 }
 
 func getServicePrincipal(endpoint scim.Endpoint, id string) *models.ServicePrincipal {
@@ -153,7 +162,7 @@ func createUserGroups(endpoint scim.Endpoint) (string,[]models.ScimMember) {
 	}
 	group := models.ScimGroup{
 		Entitlements: nil,
-		DisplayName:  "blah4",
+		DisplayName:  "blah6",
 		Members:      []models.ScimMember{member},
 		Groups:       nil,
 		Id:           "",
@@ -163,4 +172,21 @@ func createUserGroups(endpoint scim.Endpoint) (string,[]models.ScimMember) {
 		panic(err)
 	}
 	return resp.DisplayName,resp.Members
+}
+
+func getUserGroup(endpoint scim.Endpoint,id string) *models.ScimGroup {
+	fmt.Println("Getting User Group with id:",id)
+	resp, err := endpoint.GetUserGroup(id)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func deleteUserGroup(endpoint scim.Endpoint,id string) {
+	fmt.Println("Deleting User Group with id:",id)
+	err := endpoint.DeleteUserGroup(id)
+	if err != nil {
+		panic(err)
+	}
 }

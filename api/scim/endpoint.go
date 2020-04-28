@@ -98,3 +98,30 @@ func (c *Endpoint) CreateUserGroup(request *models.ScimGroup) (*models.ScimGroup
 	}
 	return &resp, nil
 }
+
+func (c *Endpoint) GetUserGroup(id string) (*models.ScimGroup,error) {
+	if id == "" {
+		return nil, fmt.Errorf("No Group id provided")
+	}
+	getUserUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
+	bytes, err := c.Client.Query("GET", getUserUrl, nil)
+	resp := models.ScimGroup{}
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Endpoint) DeleteUserGroup(id string) (error) {
+	if id == "" {
+		return fmt.Errorf("No Group id provided")
+	}
+	deleteUserUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
+	resp, err := c.Client.Query("DELETE", deleteUserUrl, nil)
+	fmt.Println(resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
