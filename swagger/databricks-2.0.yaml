@@ -721,7 +721,49 @@ definitions:
         type: string
       $ref:
         type: string
-
+  ## SCIM Groups
+  SCIMGroup:
+    properties:
+      entitlements:
+        type: array
+        items:
+          $ref: '#/definitions/Entitlements'
+      displayName:
+        type: string
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/SCIMMember'
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Groups'
+      id:
+        type: string
+  SCIMMember:
+    properties:
+      display:
+        type: string
+      value:
+        type: string
+      $ref:
+        type: string
+  ListGroupRequestSCIM:
+    properties:
+      totalResults:
+        type: number
+      startIndex:
+        type: number
+      itemsPerPage:
+        type: number
+      schemas:
+        type: array
+        items:
+          type: string
+      Resources:
+        type: array
+        items:
+          $ref: '#/definitions/SCIMGroup'
   ### Tokens ###
   TokenCreateRequest:
     required:
