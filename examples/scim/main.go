@@ -30,9 +30,30 @@ func main() {
 	}
 
 	//printServicePrincipals(listServicePrincipals(endpoint))
-	printUserGroups(listGroups(endpoint))
+	//printUserGroups(listGroups(endpoint))
 	//printCreatedGroups(createGroup(endpoint))
+	//printUsers(listUsers(endpoint))
 
+
+}
+
+func printUser(user *models.ScimUser) {
+	fmt.Println("getting user")
+	fmt.Println("user created with Id:",user.Id)
+	fmt.Println("user created with name",user.DisplayName)
+	for index, element := range user.Groups {
+		fmt.Println(index, "User added to Group with displayName: =>", element.Display)
+		fmt.Println(index, "User added to Group with Id:=>", element.Value)
+	}
+}
+
+
+func printUsers(users *models.ListUserRequestScim) {
+	fmt.Println("getting users")
+	for index, element := range users.Resources {
+		fmt.Println(index, "displayName: =>", element.DisplayName)
+		fmt.Println(index, "User Family Name: =>", element.Name.FamilyName)
+	}
 }
 
 func printGetGroup(group *models.ScimGroup) {
@@ -213,6 +234,94 @@ func updateGroup(endpoint scim.Endpoint,id string,memberId string,memberName str
 
 
 	resp,err := endpoint.UpdateGroup(id,group)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func listUsers(endpoint scim.Endpoint) *models.ListUserRequestScim {
+	fmt.Println("Listing Users ")
+	resp, err := endpoint.ListUsers()
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func createUser(endpoint scim.Endpoint,userName string,group string,) *models.ScimUser {
+	fmt.Println("Creating Users ")
+
+	entitlements := models.Entitlements{Value: "allow-cluster-create"}
+	groups := models.Groups{
+		Display: "",
+		Value:   group,
+		Ref:     "",
+	}
+
+	name := models.Name{
+		FamilyName: "",
+		GivenName:  userName,
+	}
+	user := models.ScimUser{
+		Entitlements: []models.Entitlements{entitlements},
+		DisplayName:  userName,
+		Groups:       []models.Groups{groups},
+		Emails:       nil,
+		Id:           "",
+		Name:         &name,
+		Active:       false,
+		UserName:     userName,
+	}
+	resp, err := endpoint.CreateUser(user)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func getUser(endpoint scim.Endpoint,id string) *models.ScimUser {
+	fmt.Println("Getting User  with id:",id)
+	resp, err := endpoint.GetUser(id)
+	if err != nil {
+		panic(err)
+	}
+	return resp
+}
+
+func deleteUser(endpoint scim.Endpoint,id string)  {
+	fmt.Println("Getting User  with id:",id)
+	err := endpoint.DeleteUser(id)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func updateUser(endpoint scim.Endpoint,id string,group string,userName string) *models.ScimUser  {
+	fmt.Println("Getting User  with id:",id)
+	entitlement1 := models.Entitlements{Value: "allow-cluster-create"}
+	entitlement2 := models.Entitlements{Value: "allow-instance-pool-create"}
+	groups := models.Groups{
+		Display: "",
+		Value:   group,
+		Ref:     "",
+	}
+
+	name := models.Name{
+		FamilyName: "",
+		GivenName:  userName,
+	}
+	user := models.ScimUser{
+		Entitlements: []models.Entitlements{entitlement1,entitlement2},
+		DisplayName:  userName,
+		Groups:       []models.Groups{groups},
+		Emails:       nil,
+		Id:           "",
+		Name:         &name,
+		Active:       false,
+		UserName:     userName,
+	}
+	resp,err := endpoint.UpdateUser(id,user)
 	if err != nil {
 		panic(err)
 	}

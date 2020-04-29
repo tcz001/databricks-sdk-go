@@ -764,6 +764,63 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/SCIMGroup'
+  Emails:
+    properties:
+       type:
+        type: string
+       value:
+         type: string
+       primary:
+         type: boolean
+  Name:
+    properties:
+        familyName:
+          type: string
+        givenName:
+          type: string
+  SCIMUser:
+    properties:
+      entitlements:
+        type: array
+        items:
+          $ref: '#/definitions/Entitlements'
+      displayName:
+        type: string
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Groups'
+      emails:
+        type: array
+        items:
+          $ref: '#/definitions/Emails'
+      id:
+        type: string
+      name:
+        $ref: '#/definitions/Name'
+      active:
+        type: boolean
+      userName:
+        type: string
+  ListUserRequestSCIM:
+    properties:
+      totalResults:
+        type: integer
+        format: int32
+      startIndex:
+        type: integer
+        format: int32
+      itemsPerPage:
+        type: integer
+        format: int32
+      schemas:
+        type: array
+        items:
+          type: string
+      Resources:
+        type: array
+        items:
+          $ref: '#/definitions/SCIMUser'
   ### Tokens ###
   TokenCreateRequest:
     required:
