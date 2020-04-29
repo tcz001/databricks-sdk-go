@@ -38,8 +38,8 @@ type Client struct {
 func NewClient(opts Options) (*Client, error) {
 	loadEnvConfig(&opts)
 
-	if opts.Domain == nil || opts.Token == nil {
-		return nil, fmt.Errorf("missing credentials")
+	if opts.Domain == nil {
+		return nil, fmt.Errorf("missing Domain")
 	}
 
 	if opts.XDatabricksAzureWorkspaceResourceId != nil && (opts.Token == nil || opts.XDatabricksAzureSPManagementToken == nil) {
