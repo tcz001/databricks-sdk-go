@@ -56,7 +56,9 @@ func NewClient(opts Options) (*Client, error) {
 	}
 
 	header := http.Header{}
-	header.Add("Authorization", fmt.Sprintf("Bearer %s", *opts.Token))
+	if opts.Token != nil {
+		header.Add("Authorization", fmt.Sprintf("Bearer %s", *opts.Token))
+	}
 	if opts.XDatabricksAzureWorkspaceResourceId != nil && opts.XDatabricksAzureSPManagementToken != nil {
 		header.Add("X-Databricks-Azure-SP-Management-Token", fmt.Sprintf(*opts.XDatabricksAzureSPManagementToken))
 		header.Add("X-Databricks-Azure-Workspace-Resource-Id", fmt.Sprintf(*opts.XDatabricksAzureWorkspaceResourceId))
