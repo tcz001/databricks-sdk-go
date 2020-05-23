@@ -157,10 +157,10 @@ func (c *Client) makeRequest(request *http.Request) ([]byte, error) {
 
 	defer response.Body.Close()
 
-	return c.parseResponse(*response)
+	return c.parseResponse(request, *response)
 }
 
-func (c *Client) parseResponse(response http.Response) ([]byte, error) {
+func (c *Client) parseResponse(request *http.Request, response http.Response) ([]byte, error) {
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
@@ -181,7 +181,7 @@ func (c *Client) parseResponse(response http.Response) ([]byte, error) {
 			}
 		} else {
 			errorResponse.Message = fmt.Sprintf(
-				"request error: %s", string(responseBytes))
+				"databricks request: %v %#v error: %#v %s", request.URL, request, response, string(responseBytes))
 		}
 
 		return nil, NewError(errorResponse, response.StatusCode)
