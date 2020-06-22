@@ -141,7 +141,7 @@ func (c *Endpoint) DeleteGroup(id string) error {
 	deleteGroupUrl := fmt.Sprintf("preview/scim/v2/Groups/%s", id)
 	resp, err := c.Client.Query("DELETE", deleteGroupUrl, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	fmt.Println(resp)
 	if err != nil {
@@ -218,7 +218,7 @@ func (c *Endpoint) DeleteUser(id string) error {
 	deleteUserUrl := fmt.Sprintf("preview/scim/v2/Users/%s", id)
 	resp, err := c.Client.Query("DELETE", deleteUserUrl, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	fmt.Println("delete resp:", resp)
 	if err != nil {
