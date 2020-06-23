@@ -2,9 +2,11 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -12,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang/glog"
 	"github.com/tcz001/databricks-sdk-go/models"
+	"golang.org/x/time/rate"
 )
 
 type Options struct {
@@ -23,16 +25,18 @@ type Options struct {
 	XDatabricksAzureWorkspaceResourceId *string
 	XDatabricksAzureSPManagementToken   *string
 
-	MaxRetries int
-	RetryDelay time.Duration
+	MaxRetries         int
+	RetryDelay         time.Duration
+	RateLimitPerSecond int
 }
 
 type Client struct {
-	http       *http.Client
-	baseUrl    *url.URL
-	header     http.Header
-	maxRetries int
-	retryDelay time.Duration
+	http        *http.Client
+	baseUrl     *url.URL
+	header      http.Header
+	maxRetries  int
+	retryDelay  time.Duration
+	rateLimiter *rate.Limiter
 }
 
 func NewClient(opts Options) (*Client, error) {
@@ -71,10 +75,11 @@ func NewClient(opts Options) (*Client, error) {
 				return http.ErrUseLastResponse
 			},
 		},
-		baseUrl:    baseUrl,
-		header:     header,
-		maxRetries: opts.MaxRetries,
-		retryDelay: opts.RetryDelay,
+		baseUrl:     baseUrl,
+		header:      header,
+		maxRetries:  opts.MaxRetries,
+		retryDelay:  opts.RetryDelay,
+		rateLimiter: rate.NewLimiter(rate.Limit(opts.RateLimitPerSecond), 1),
 	}
 
 	return &client, nil
@@ -103,6 +108,10 @@ func (c *Client) Query(method string, path string, data interface{}) ([]byte, er
 	var responseBytes []byte
 
 	for i := 0; ; i++ {
+		err := c.rateLimiter.Wait(context.TODO())
+		if err == nil {
+			fmt.Printf("rate limit error: %v", err)
+		}
 		responseBytes, err = c.makeRequest(request)
 		if err == nil {
 			break
@@ -146,14 +155,14 @@ func (c *Client) buildRequest(method string, path string, data interface{}) (*ht
 }
 
 func (c *Client) makeRequest(request *http.Request) ([]byte, error) {
-	glog.Infof("HTTP request: %v", request)
+	log.Printf("[DEBUG] HTTP request: %v", request)
 
 	response, err := c.http.Do(request)
 	if err != nil {
 		return nil, err
 	}
 
-	glog.Infof("HTTP response: %v", response)
+	log.Printf("[DEBUG] HTTP response: %v", response)
 
 	defer response.Body.Close()
 
@@ -166,22 +175,25 @@ func (c *Client) parseResponse(request *http.Request, response http.Response) ([
 		return nil, err
 	}
 
-	glog.Infof("Response bytes: %s", responseBytes)
+	log.Printf("[DEBUG] Response bytes: %s", responseBytes)
 
 	if response.StatusCode == 204 {
 		return nil, nil
 	}
 	if response.StatusCode != 200 && response.StatusCode != 201 {
+		log.Printf("[ERROR] Error Response StatusCode: %d", response.StatusCode)
 		errorResponse := models.ErrorResponse{}
 
 		if strings.Contains(response.Header.Get("Content-Type"), "json") {
 			err = json.Unmarshal(responseBytes, &errorResponse)
 			if err != nil {
+				log.Printf("[ERROR] Error Response : %v", errorResponse)
 				return nil, err
 			}
 		} else {
 			errorResponse.Message = fmt.Sprintf(
 				"databricks request: %v %#v error: %#v %s", request.URL, request, response, string(responseBytes))
+			log.Printf("[ERROR] Error Response Message: %s", errorResponse.Message)
 		}
 
 		return nil, NewError(errorResponse, response.StatusCode)
