@@ -187,8 +187,10 @@ func (c *Client) parseResponse(request *http.Request, response http.Response) ([
 		if strings.Contains(response.Header.Get("Content-Type"), "json") {
 			err = json.Unmarshal(responseBytes, &errorResponse)
 			if err != nil {
-				log.Printf("[ERROR] Error Response : %v", errorResponse)
-				return nil, err
+				log.Printf("[ERROR] Error json.Unmarshal Response Message: %s", err.Error())
+				errorResponse.Message = fmt.Sprintf(
+					"databricks request: %v %#v error: %#v %s", request.URL, request, response, string(responseBytes))
+				log.Printf("[ERROR] Error Response Message: %s", errorResponse.Message)
 			}
 		} else {
 			errorResponse.Message = fmt.Sprintf(
